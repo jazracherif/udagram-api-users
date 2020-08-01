@@ -10,7 +10,7 @@ before_script:
 script:
 - docker --version
 - |
-  docker build -t udagram-api-feed \
+  docker build -t udagram-api-users \
   --build-arg POSTGRES_USERNAME_ARG=$POSTGRES_USERNAME_ARG \
   --build-arg POSTGRES_PASSWORD_ARG=$POSTGRES_PASSWORD_ARG \
   --build-arg POSTGRES_HOST_ARG=$POSTGRES_HOST_ARG \
@@ -22,11 +22,11 @@ script:
   --build-arg PORT_ARG=$PORT_ARG \
   --build-arg URL_ARG=$URL_ARG \
   .
-- docker tag udagram-api-feed:latest 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-feed:latest
+- docker tag udagram-api-users:latest 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-users:latest
 after_success:
 - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin
   998443328643.dkr.ecr.us-east-1.amazonaws.com
-- docker push 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-feed:latest
+- docker push 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-users:latest
 env:
   global:
   - secure: PLFO2N96f6fHJFVWdj5X3//yeaZH4k383Tzp4kKZXbZYe2ginD0wluTS6Cotsp+yEqtNVDFnF0zD74wDPtU3NYZlJ1kX81F9ESXUcxxPh7W8Dfw9cN9476I15rbAFnYgWdTBo9CT29W9X/sj/IhnHWQbXWd1sXjEQH1qS+Cvb0WAYe1+l3iH1OO0mOzOztiiNCdg1Q9RkcheuISoMuVAthX75IWPPSPItr9dP6ChOChI0ZYsAMtbw4z/z0WehwpX1CFbo6XroE1wJNZXVjKpbp0VTB+CKfS9Wpep9v5bDQK0Au6oB7rTgKfZG4AxkqAfgYWQHh52+3tQIw0b+PLMkc7xDUF3O1bVupPoxp57OM30Qr5JCoXOMXVp/gHs+I7lURpZ0gNhsGA+1/CHbqZNZEjcAW4O0yQdlnZ4/BgIx/Ku4u94PL+DWvf8vNuGVL95jry4c/gYjTtqbrUDZJZwxdVCrQ3j3G23inp0NFzV7JmVJuXBGolleXoJugEO4sng3YZJeWaV72D6GFe6U52NfBnBmowI8HNYuixMbn1QtJdmn+IpE13RjRLC3LIivycYT1IU6cFCterWiM7EGdExOqOsRw6HLmv/EjnlXOOTxkDaUWczLgBG/4ghCgg5I1GZ0eAAEufmrXBfEcXIAWWo4Jbfh2XhGAAx3gflzwuioxU=
