@@ -1,21 +1,33 @@
 language: node_js
 node_js:
-  - 13
-
+- 13
 services:
-  - docker
-
+- docker
 install:
-  - echo "nothing to install"
-
+- pip install --user awscli
 before_script:
-  - echo "no before scripts actions"
-
+- echo "no before scripts actions"
 script:
-  - docker --version 
-  - docker build -t udagram-api-users .
-  - docker tag udagram-api-users jazracherif/udagram-api-users:latest
-
+- docker --version
+- |
+  docker build -t udagram-api-feed \
+  --build-arg POSTGRES_USERNAME_ARG=$POSTGRES_USERNAME_ARG \
+  --build-arg POSTGRES_PASSWORD_ARG=$POSTGRES_PASSWORD_ARG \
+  --build-arg POSTGRES_HOST_ARG=$POSTGRES_HOST_ARG \
+  --build-arg POSTGRES_DB_ARG=$POSTGRES_DB_ARG \
+  --build-arg AWS_BUCKET_ARG=$AWS_BUCKET_ARG \
+  --build-arg AWS_REGION_ARG=$AWS_REGION_ARG \
+  --build-arg AWS_PROFILE_ARG=$AWS_PROFILE_ARG \
+  --build-arg JWT_SECRET_ARG=$JWT_SECRET_ARG \
+  --build-arg PORT_ARG=$PORT_ARG \
+  --build-arg URL_ARG=$URL_ARG \
+  .
+- docker tag udagram-api-feed:latest 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-feed:latest
 after_success:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push jazracherif/udagram-api-users
+- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin
+  998443328643.dkr.ecr.us-east-1.amazonaws.com
+- docker push 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-api-feed:latest
+env:
+  global:
+  - secure: PLFO2N96f6fHJFVWdj5X3//yeaZH4k383Tzp4kKZXbZYe2ginD0wluTS6Cotsp+yEqtNVDFnF0zD74wDPtU3NYZlJ1kX81F9ESXUcxxPh7W8Dfw9cN9476I15rbAFnYgWdTBo9CT29W9X/sj/IhnHWQbXWd1sXjEQH1qS+Cvb0WAYe1+l3iH1OO0mOzOztiiNCdg1Q9RkcheuISoMuVAthX75IWPPSPItr9dP6ChOChI0ZYsAMtbw4z/z0WehwpX1CFbo6XroE1wJNZXVjKpbp0VTB+CKfS9Wpep9v5bDQK0Au6oB7rTgKfZG4AxkqAfgYWQHh52+3tQIw0b+PLMkc7xDUF3O1bVupPoxp57OM30Qr5JCoXOMXVp/gHs+I7lURpZ0gNhsGA+1/CHbqZNZEjcAW4O0yQdlnZ4/BgIx/Ku4u94PL+DWvf8vNuGVL95jry4c/gYjTtqbrUDZJZwxdVCrQ3j3G23inp0NFzV7JmVJuXBGolleXoJugEO4sng3YZJeWaV72D6GFe6U52NfBnBmowI8HNYuixMbn1QtJdmn+IpE13RjRLC3LIivycYT1IU6cFCterWiM7EGdExOqOsRw6HLmv/EjnlXOOTxkDaUWczLgBG/4ghCgg5I1GZ0eAAEufmrXBfEcXIAWWo4Jbfh2XhGAAx3gflzwuioxU=
+  - secure: eZKxuA9l3Yabv6TIujhGSHpt4p9Yam52TSI0hjxCUp8BPl+hm4Y6+KPWNITmLZnKlbhHM7ZI9ebjoixMNyWLWl/cgNQBmgHR3Yn/SbQeNpnaPva+IeaHF9pHB4RcC6o0wfHoB+vaF7laMMru5EdtPQep7puYwHjCoSQbs+Nn+clEkb6zhRO5DF9OF2XnmN4bK74j5iIa5oU6Qy4id7H7g7mpsTVjAz8psbKmUX8Wdqs3ONn2QQzIA9rnH6U6yNjhiRnvko4xZ3uhUm2O8wQNKyCGJKaxMyfxBgqiYkeZ4JGeTI2Ne5FLkBVHKB1qAY22wcAN4+0VohMtm2LBxV+aHxx15BSzpGkKo1x2EJ0ND4HBcieZy4fwjnVbGnLEQDCQa7mgIJHUTKwlHn1kyXGKXZY5KCm9PiCpFG/QLTf0yEhe1lRLHX1Bp23dWh/AXyi3+LJDxDifADXCLw3sW4/7Zwdn4IRhwuYMSFmefkGN0fwA2WhP6JBc41aZkAo0qtHoK8VR5rYJ3JgZrTpj/mX1h2DbjsB191QUxBtgDl8GZ3pIDYCpWXjIpql9z8wJaxa7V4pTtzDtHUvhdVVriTRTPcRkcX+hOcHWOmUh3txrw7YlQu4gnBW4B0URtVgGv7FQXyvGSy/aeNTfZkrgKPcbXHpYCd5twN0y56tnTqcBBaw=
